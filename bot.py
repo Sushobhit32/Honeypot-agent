@@ -1,8 +1,14 @@
 from groq import Groq
-from config import GROQ_API_KEY, GROQ_MODEL
 import os
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile")
+
+if not GROQ_API_KEY:
+    raise RuntimeError("GROQ_API_KEY not set in environment variables")
+
+client = Groq(api_key=GROQ_API_KEY)
 
 def groq_chat(system_prompt, user_prompt):
     completion = client.chat.completions.create(

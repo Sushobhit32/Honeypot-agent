@@ -1,5 +1,10 @@
 import requests
-from config import FINAL_CALLBACK_URL
+import os
+
+FINAL_CALLBACK_URL = os.getenv("FINAL_CALLBACK_URL")
+
+if not FINAL_CALLBACK_URL:
+    raise RuntimeError("FINAL_CALLBACK_URL not set in environment variables")
 
 def send_final_callback(session_id, session):
     payload = {

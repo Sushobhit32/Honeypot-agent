@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
-from config import API_KEY
+import os
+
 from sessions import get_session
 from detector import detect_scam
 from extractor import extract_intelligence
@@ -7,6 +8,12 @@ from agent import agent_reply
 from callback import send_final_callback
 
 app = Flask(__name__)
+
+# ✅ Read API key from environment variable
+API_KEY = os.getenv("API_KEY")
+
+if not API_KEY:
+    raise RuntimeError("API_KEY not set in environment variables")
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
@@ -25,8 +32,7 @@ def analyze():
         session["scamDetected"] = True
 
     extract_intelligence(message_text, session["extracted"])
-    print("Extracted Data :",
-    session["extracted"])
+    print("Extracted Data:", session["extracted"])
 
     reply = "Okay."
     if session["scamDetected"]:
@@ -41,4 +47,4 @@ def analyze():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
